@@ -1,0 +1,25 @@
+version: '3.8'
+
+networks:
+  edunet:
+    driver: bridge
+
+services:
+  asr:
+    build:
+      context: ./asr
+      dockerfile: Dockerfile
+    container_name: asr_service
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: unless-stopped
+    networks: 
+     - edunet
+
+
+volumes:
+  postgres_data:
