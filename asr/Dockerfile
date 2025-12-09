@@ -31,6 +31,8 @@ RUN poetry install --only=main
 # Copy the rest of the application code
 COPY . .
 
+COPY ../common ./common
+
 # Create a non-root user
 RUN useradd --create-home --shell /bin/bash app && chown -R app:app /app
 USER app

@@ -10,18 +10,3 @@ class TranscriptionResponse(BaseModel):
 
 class HealthCheck(BaseModel):
     status: str = "OK"
-
-
-class GenerateTokenRequest(BaseModel):
-    secret_token: str
-
-
-class GenerateTokenResponse(BaseModel):
-    access_token: str
-    expires_at: str
-
-
-class TokenData:
-    def __init__(self, token: str, expires_at: datetime):
-        self.token = token
-        self.expires_at = expires_at

@@ -3,7 +3,8 @@ from fastapi import FastAPI
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    from api.routes import asr_router, auth_router
+    from api.routes import asr_router
+    from common.auth.router import auth_router
     app.include_router(asr_router)
     app.include_router(auth_router)
     yield
