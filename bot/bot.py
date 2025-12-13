@@ -12,6 +12,13 @@ from dotenv import load_dotenv
 
 from llm_client import LLMServiceClient
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+
 load_dotenv()
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -98,14 +105,29 @@ async def delete_docs(message: Message):
 
 # -------------------- text --------------------
 
+@dp.message(F.photo)
+async def handle_photo(message: Message):
+    await ensure_access_token()
+    dialog_id = await get_dialog_id(message.from_user.id)
+
+    picture = await download_photo(message)
+    query = message.caption or ""
+
+    response = await llm_client.text_completion(
+        dialog_id=dialog_id,
+        query=query,
+        picture=picture
+    )
+
+    await message.answer(response.get("content", "🤷 Нет ответа"))
+
+
 @dp.message(F.text)
 async def handle_text(message: Message):
     await ensure_access_token()
     dialog_id = await get_dialog_id(message.from_user.id)
 
     picture = None
-    if message.reply_to_message and message.reply_to_message.photo:
-        picture = await download_photo(message.reply_to_message)
 
     response = await llm_client.text_completion(
         dialog_id=dialog_id,
@@ -126,8 +148,6 @@ async def handle_voice(message: Message):
     audio_data = await download_voice(message)
 
     picture = None
-    if message.caption and message.photo:
-        picture = await download_photo(message)
 
     response = await llm_client.audio_completion(
         dialog_id=dialog_id,
