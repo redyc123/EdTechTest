@@ -14,6 +14,8 @@
 ### Сервис ASR
 - Преобразует аудио файлы в текст с использованием OpenAI Whisper
 - Предоставляет аутентификацию с API-ключами
+- Поддерживает множество форматов аудио и видео
+- Автоматическое определение языка речи
 
 ### Сервис LLM
 - AI-ответы на вопросы с использованием векторной базы знаний
@@ -39,13 +41,13 @@
 
 3. Запустите сервисы:
    ```bash
-   docker-compose up -d
+   make up
    ```
 
 ## Документация по API
 
-- Сервис LLM: См. [llm/API_DOCUMENTATION.md](llm/API_DOCUMENTATION.md)
-- Сервис ASR: См. [asr/README.md](asr/README.md) (или посмотрите документацию FastAPI по http://localhost:8000/docs)
+- Сервис LLM: См. [llm/README.md](llm/README.md)
+- Сервис ASR: См. [asr/README.md](asr/README.md)
 
 ## Используемые технологии
 
