@@ -1,19 +1,17 @@
 from fastapi import APIRouter
 from api.models import *
-import secrets
 import os
-from datetime import datetime, timedelta
 from fastapi import File, UploadFile, HTTPException, Depends
 import tempfile
-from common.auth.auth import require_valid_token, valid_tokens
+from common.auth.auth import require_valid_token
 
 
 from constants import MODEL
 
-asr_router = APIRouter(tags=["ASR"])
+asr_router = APIRouter(tags=["ASR"], dependencies=[Depends(require_valid_token)])
 
 
-@asr_router.post("/transcribe", response_model=TranscriptionResponse, dependencies=[Depends(require_valid_token)])
+@asr_router.post("/transcribe", response_model=TranscriptionResponse)
 async def transcribe_audio(file: UploadFile = File(...)):
     """
     Transcribe uploaded audio file to text using Whisper.
@@ -72,7 +70,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
                 pass  # Ignore errors during cleanup
 
 
-@asr_router.get("/health", response_model=HealthCheck, dependencies=[Depends(require_valid_token)])
+@asr_router.get("/health", response_model=HealthCheck)
 async def health_check():
     """Health check endpoint to verify the service is running."""
     return HealthCheck(status="OK")

@@ -17,19 +17,19 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Poetry
-RUN pip install poetry==1.8.2
+RUN pip install poetry==2.2.1
 
 # Copy dependency files
-COPY ./asr/pyproject.toml ./asr/poetry.lock ./
+COPY ./llm/pyproject.toml ./llm/poetry.lock ./
 
 # Configure Poetry to not create virtual environment
 RUN poetry config virtualenvs.create false
 
 # Install dependencies
-RUN poetry install --only=main
+RUN poetry install --only=main --no-root
 
 # Copy the rest of the application code
-COPY ./asr .
+COPY ./llm .
 
 COPY ./common ./common
 

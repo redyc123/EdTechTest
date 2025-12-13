@@ -17,13 +17,16 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(HTTPBea
 
     return token
 
-def verify_token(token: str) -> bool:
+def verify_token(token: str, valid_tokens: list) -> bool:
     """Check if the token is valid and not expired"""
-    global valid_tokens
     # Remove expired tokens
-    current_time = datetime.utcnow()
-    valid_tokens = [t for t in valid_tokens if t.expires_at > current_time]
-
+    current_time = datetime.now()
+    print("1", valid_tokens)
+    valid_tokens = [
+        t for t in valid_tokens 
+        if t.expires_at > current_time
+    ]
+    print("2", valid_tokens)
     # Check if the token exists in valid_tokens
     for token_data in valid_tokens:
         if token_data.token == token:
@@ -36,7 +39,7 @@ def require_valid_token(request: Request, token: str = Depends(get_current_user)
     if not token:
         token = request.query_params.get('token', "")
 
-    if not token or not verify_token(token):
+    if not token or not verify_token(token, valid_tokens):
         raise HTTPException(
             status_code=401,
             detail="Invalid or missing token",
