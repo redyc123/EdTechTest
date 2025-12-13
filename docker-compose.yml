@@ -43,7 +43,7 @@ services:
     env_file:
       - .env
     restart: unless-stopped
-    networks: 
+    networks:
      - edunet
   llm:
     build:
@@ -51,19 +51,19 @@ services:
       dockerfile: llm/Dockerfile
     container_name: llm_service
     ports:
-      - "8001:8000"
+      - "8001:8001"
     env_file:
       - .env
     restart: unless-stopped
     depends_on:
        db:
         condition: service_healthy
-    networks: 
+    networks:
      - edunet
   docling-serve:
     image: ghcr.io/docling-project/docling-serve:latest
     container_name: docling-serve
-    env_file: 
+    env_file:
       - .env
     ports:
       - "8080:5001"
@@ -72,7 +72,17 @@ services:
     volumes:
       - ./scratch:/tmp/docling
     restart: unless-stopped
-    networks: 
+    networks:
+     - edunet
+  bot:
+    build:
+      context: .
+      dockerfile: bot/Dockerfile
+    container_name: telegram_bot
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
      - edunet
 
 
